@@ -1,101 +1,152 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+
+const MAX_LIFE_AGE = 80;
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [monthlyPrice, setMonthlyPrice] = useState(0);
+  const [annualPrice, setAnnualPrice] = useState(0);
+  const [lifetimePrice, setLifetimePrice] = useState(0);
+  const [years, setYears] = useState(0);
+  const [isLifetime, setIsLifetime] = useState(false);
+  const [age, setAge] = useState(0);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const calculatePrices = () => {
+    const remainingYears = isLifetime ? MAX_LIFE_AGE - age : years;
+    const totalMonthly = monthlyPrice * 12 * remainingYears;
+    const totalAnnual = annualPrice * remainingYears;
+    const totalLifetime = lifetimePrice;
+
+    return { totalMonthly, totalAnnual, totalLifetime };
+  };
+
+  const handleInputChange = (setter) => (e) => {
+    const value = parseFloat(e.target.value);
+    setter(isNaN(value) || value < 0 ? 0 : value);
+  };
+
+  const savings =
+    calculatePrices().totalMonthly - calculatePrices().totalLifetime;
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-4xl font-bold mb-8">Don&apos;t subscribe bro!</h1>
+      <div className="w-full max-w-md">
+        <div className="mb-4">
+          <label htmlFor="monthlyPrice" className="block mb-2">
+            Monthly Subscription Price:
+          </label>
+          <input
+            type="number"
+            id="monthlyPrice"
+            value={monthlyPrice}
+            onChange={handleInputChange(setMonthlyPrice)}
+            className="w-full px-3 py-2 border border-gray-300 rounded text-black"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div className="mb-4">
+          <label htmlFor="annualPrice" className="block mb-2">
+            Annual Subscription Price:
+          </label>
+          <input
+            type="number"
+            id="annualPrice"
+            value={annualPrice}
+            onChange={handleInputChange(setAnnualPrice)}
+            className="w-full px-3 py-2 border border-gray-300 rounded text-black"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="lifetimePrice" className="block mb-2">
+            Lifetime Subscription Price:
+          </label>
+          <input
+            type="number"
+            id="lifetimePrice"
+            value={lifetimePrice}
+            onChange={handleInputChange(setLifetimePrice)}
+            className="w-full px-3 py-2 border border-gray-300 rounded text-black"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+        </div>
+        {isLifetime ? (
+          <div className="mb-4">
+            <label htmlFor="age" className="block mb-2">
+              Current Age:{" "}
+              <span className="text-xs italic">
+                (Assuming avg lifespan to 80 years)
+              </span>
+            </label>
+            <input
+              type="number"
+              id="age"
+              value={age}
+              onChange={handleInputChange(setAge)}
+              className="w-full px-3 py-2 border border-gray-300 rounded text-black"
+            />
+          </div>
+        ) : (
+          <div className="mb-4">
+            <label htmlFor="years" className="block mb-2">
+              Number of Years:
+            </label>
+            <input
+              type="number"
+              id="years"
+              value={years}
+              onChange={handleInputChange(setYears)}
+              className="w-full px-3 py-2 border border-gray-300 rounded text-black"
+            />
+          </div>
+        )}
+        <div className="mb-4 flex items-center">
+          <input
+            type="checkbox"
+            id="isLifetime"
+            checked={isLifetime}
+            onChange={(e) => setIsLifetime(e.target.checked)}
+            className="mr-2"
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <label htmlFor="isLifetime">Lifetime Subscription</label>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Price Comparison</h2>
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">Subscription Type</th>
+                <th className="border px-4 py-2">Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border px-4 py-2">Monthly Subscription</td>
+                <td className="border px-4 py-2">
+                  ${calculatePrices().totalMonthly.toFixed(2)}
+                </td>
+              </tr>
+              <tr>
+                <td className="border px-4 py-2">Annual Subscription</td>
+                <td className="border px-4 py-2">
+                  ${calculatePrices().totalAnnual.toFixed(2)}
+                </td>
+              </tr>
+              <tr>
+                <td className="border px-4 py-2">Lifetime Subscription</td>
+                <td className="border px-4 py-2">
+                  ${calculatePrices().totalLifetime.toFixed(2)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {savings > 0 && (
+          <p className="mt-4 text-sm italic">
+            You&apos;ll save ${savings.toFixed(2)} with a lifetime subscription
+            compared to a monthly subscription.
+          </p>
+        )}
+      </div>
     </div>
   );
 }

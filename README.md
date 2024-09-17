@@ -7,3 +7,6 @@ So I made this to give a generic overview of how much will it cost and **how muc
 Thank me later!!!
 
 Live: https://dont-sub-bro.vercel.app
+
+Reason/Demo: https://www.tella.tv/video/don-t-subscribe-bro-9x43
+Launch: https://x.com/heytulsiprasad/status/1835725799581749360
